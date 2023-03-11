@@ -20,25 +20,35 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatPlaces>(
-        child: const Center(
-          child: Text(
-            'Nenhum Local Cadastrado!',
-          ),
-        ),
-        builder: (context, greatePlaces, child) => greatePlaces.itemsCount == 0
-            ? child!
-            : ListView.builder(
-                itemBuilder: (context, index) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage:
-                        FileImage(greatePlaces.itemByIndex(index).image),
+      body: FutureBuilder(
+        future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Consumer<GreatPlaces>(
+                    child: const Center(
+                      child: Text(
+                        'Nenhum Local Cadastrado!',
+                      ),
+                    ),
+                    builder: (context, greatePlaces, child) =>
+                        greatePlaces.itemsCount == 0
+                            ? child!
+                            : ListView.builder(
+                                itemBuilder: (context, index) => ListTile(
+                                  leading: CircleAvatar(
+                                    backgroundImage: FileImage(
+                                        greatePlaces.itemByIndex(index).image),
+                                  ),
+                                  title: Text(
+                                      greatePlaces.itemByIndex(index).title),
+                                  onTap: () {},
+                                ),
+                                itemCount: greatePlaces.itemsCount,
+                              ),
                   ),
-                  title: Text(greatePlaces.itemByIndex(index).title),
-                  onTap: () {},
-                ),
-                itemCount: greatePlaces.itemsCount,
-              ),
       ),
     );
   }
