@@ -22,33 +22,40 @@ class PlacesListScreen extends StatelessWidget {
       ),
       body: FutureBuilder(
         future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? const Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : Consumer<GreatPlaces>(
-                    child: const Center(
-                      child: Text(
-                        'Nenhum Local Cadastrado!',
-                      ),
-                    ),
-                    builder: (context, greatePlaces, child) =>
-                        greatePlaces.itemsCount == 0
-                            ? child!
-                            : ListView.builder(
-                                itemBuilder: (context, index) => ListTile(
-                                  leading: CircleAvatar(
-                                    backgroundImage: FileImage(
-                                        greatePlaces.itemByIndex(index).image),
-                                  ),
-                                  title: Text(
-                                      greatePlaces.itemByIndex(index).title),
-                                  onTap: () {},
-                                ),
-                                itemCount: greatePlaces.itemsCount,
-                              ),
-                  ),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return Consumer<GreatPlaces>(
+              child: const Center(
+                child: Text(
+                  'Nenhum Local Cadastrado!',
+                ),
+              ),
+              builder: (context, greatePlaces, child) {
+                if (greatePlaces.itemsCount == 0) {
+                  return child!;
+                } else {
+                  return ListView.builder(
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage:
+                              FileImage(greatePlaces.itemByIndex(index).image),
+                        ),
+                        title: Text(greatePlaces.itemByIndex(index).title),
+                        onTap: () {},
+                      );
+                    },
+                    itemCount: greatePlaces.itemsCount,
+                  );
+                }
+              },
+            );
+          }
+        },
       ),
     );
   }
