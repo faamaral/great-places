@@ -28,7 +28,7 @@ To run this app on your machine, follow these steps:
 1. Clone this repository to your local machine.
 2. Open the project directory in a code editor.
 3. Run `flutter pub get` to install the project dependencies.
-4. Define a value for the API_KEY key in a .env file to access the Google Maps APIs.
+4. Define a value for the `API_KEY` key in a `.env` file to access the Google Maps APIs.
 5. Connect a device or start an emulator.
 6. Run `flutter run` to launch the app on your device or emulator.
 7. Run `flutter build apk` to build the app for android so.
