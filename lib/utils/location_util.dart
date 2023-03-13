@@ -1,11 +1,21 @@
-import 'dart:io';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
 
-final String googleApiKey = '${dotenv.env['API_KEY']}';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:great_places/utils/environment.dart';
+import 'package:http/http.dart' as http;
+
+// final String googleApiKey = '${dotenv.env['API_KEY']}';
 
 class LocationUtil {
-  static String GenerateLocationPreviewImage(
+  static String generateLocationPreviewImage(
       {required double latitude, required double longitude}) {
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C${latitude},$longitude&key=$googleApiKey';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=${latitude},${longitude}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C${latitude},$longitude&key=${Environment.googleApiKey}';
+  }
+
+  static Future<String> getAddressFrom(LatLng position) async {
+    final url =
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=${Environment.googleApiKey}';
+    final response = await http.get(Uri.parse(url));
+    return jsonDecode(response.body)['results'][0]['formatted_address'];
   }
 }
